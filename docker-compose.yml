@@ -1,0 +1,44 @@
+services:
+  django:
+    build:
+      context: ./nimblestore
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./nimblestore:/app
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - POSTGRES_DB=nimblestore
+      - POSTGRES_USER=nimblestore
+      - POSTGRES_PASSWORD=nimblestore
+    restart: always
+
+  svelte:
+    build:
+      context: ./nimblestore/nimblestore_ui
+      target: builder
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nimblestore/nimblestore_ui:/app
+      - /app/node_modules
+    restart: always
+  
+  postgres:
+    image: postgres:15
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+    environment:
+      - DB_HOST=postgres
+      - POSTGRES_DB=nimblestore
+      - POSTGRES_USER=nimblestore
+      - POSTGRES_PASSWORD=nimblestore
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  postgres_data:
