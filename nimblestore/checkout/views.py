@@ -4,6 +4,9 @@ from rest_framework import viewsets
 from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
 
+from .models import Product
+from .serializers import ProductSerializer
+
 
 class IndexView(generic.TemplateView):
     template_name = "index.html"
@@ -14,7 +17,8 @@ class ProductListView(viewsets.ModelViewSet):
     API endpoint that allows products to be listed.
     """
 
-    # TODO Your view code here
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
 
 
 class OrderView(APIView):

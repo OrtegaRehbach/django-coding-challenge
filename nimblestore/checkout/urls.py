@@ -1,12 +1,14 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
-from . import views
+from .views import IndexView, OrderView, ProductListView
+
+router = DefaultRouter()
+router.register(r"products", ProductListView, basename="product")
 
 urlpatterns = [
-    path("", views.IndexView.as_view(), name="index"),
-    path("api", views.IndexView.as_view(), name="index"),
-    path(
-        "api/products/", views.ProductListView.as_view({"get": "list"}), name="products"
-    ),
-    path("api/order/", views.OrderView.as_view(), name="order"),
+    path("", IndexView.as_view(), name="index"),
+    path("api", IndexView.as_view(), name="index"),
+    path("api/order/", OrderView.as_view(), name="order"),
+    path("api/", include(router.urls)),
 ]
