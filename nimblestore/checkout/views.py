@@ -47,7 +47,7 @@ class OrderView(APIView):
                 continue
 
             # Check that there is enough stock
-            if product.quantity < quantity_requested:
+            if product.quantity < quantity_requested and quantity_requested < 0:
                 error_messages.append(
                     f"Product '{product.name}' does not have enough stock. Current stock: {product.quantity}."
                 )
