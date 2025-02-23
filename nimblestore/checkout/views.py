@@ -53,6 +53,10 @@ class OrderView(APIView):
                 )
                 continue
 
+            product = Product.objects.get(name=product_name)
+            product.quantity -= quantity_requested
+            product.save()
+
             # Add to the total
             total += product.price * quantity_requested
 
